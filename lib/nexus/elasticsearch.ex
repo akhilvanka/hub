@@ -19,7 +19,6 @@ defmodule Nexus.Elasticsearch do
           |> clean_job()
           |> hash_job()
 
-    IO.inspect(job)
     ssl_config = ssl_config()
     auth = [{"Authorization", "Basic #{Base.encode64("#{@es_user}:#{@es_pass}")}"}]
 
