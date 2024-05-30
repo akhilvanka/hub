@@ -33,6 +33,10 @@ defmodule Nexus.Seeds do
         %Company{name: company_name, cached_hash: cached_hash}
         |> Repo.insert()
 
+        body
+        |> Jason.decode!()
+        |> Enum.each(&Nexus.Elasticsearch.put/1)
+
       {:ok, %HTTPoison.Response{body: _body, status_code: 404}} ->
         Logger.error("Company not found: #{company_name}")
 

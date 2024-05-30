@@ -30,6 +30,10 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Get Elasticsearch credentials
+config :nexus, elasticsearch_username: System.get_env("ELASTICSEARCH_USERNAME")
+config :nexus, elasticsearch_password: System.get_env("ELASTICSEARCH_PASSWORD")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
