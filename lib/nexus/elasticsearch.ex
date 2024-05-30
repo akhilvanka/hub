@@ -39,7 +39,7 @@ defmodule Nexus.Elasticsearch do
 
   defp clean_job(job) do
     job
-    |> Map.drop(["description", "descriptionBody", "opening", "openingPlain", "additional", "additionalPlain", "lists", "id"])
+    |> Map.drop(["description", "descriptionBody", "opening", "openingPlain", "additional"])
     |> update_in(["categories"], fn
       nil -> %{}
       categories -> Map.drop(categories, ["location"])
