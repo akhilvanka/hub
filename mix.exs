@@ -4,7 +4,7 @@ defmodule Nexus.MixProject do
   def project do
     [
       app: :nexus,
-      version: "0.1.0",
+      version: "0.0.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -40,7 +40,9 @@ defmodule Nexus.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.2"}
+      {:bandit, "~> 1.2"},
+      {:httpoison, "~> 2.0"},
+      {:csv, "~> 3.2"}
     ]
   end
 
@@ -55,7 +57,7 @@ defmodule Nexus.MixProject do
       setup: ["deps.get", "ecto.setup"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
     ]
   end
 end
