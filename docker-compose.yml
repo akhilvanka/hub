@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:alpine
+    ports: 
+      - 1205:5432
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    restart: always
+    environment: 
+      - POSTGRES_USER=3618E63C23D8DD0C
+      - POSTGRES_PASSWORD=E9421F1B279A1AE6008F1231127A6447
+    networks:
+      - postgres_external_network
+
+networks: 
+  postgres_external_network:
+    driver: bridge
