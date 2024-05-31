@@ -9,8 +9,8 @@ defmodule Nexus.Elasticsearch do
   """
   @spec put(map) :: {:ok} | {:error, String.t}
   def put(job) do
-    # id = job["id"]
-    id = Map.get(job, "id")
+    id = job["id"]
+    # id = Map.get(job, "id")
 
     job = job
           |> clean_job()
