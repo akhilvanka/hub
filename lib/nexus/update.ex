@@ -27,6 +27,7 @@ defmodule Nexus.Update do
         new_hash = :crypto.hash(:sha256, body) |> Base.encode16()
 
         if new_hash != cached_hash do
+          Logger.info("Updating company: #{company_name}")
           update_hash(company_name, new_hash)
           Nexus.Elasticsearch.put(body)
         end
