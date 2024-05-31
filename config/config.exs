@@ -34,6 +34,12 @@ config :phoenix, :json_library, Jason
 config :nexus, elasticsearch_username: System.get_env("ELASTICSEARCH_USERNAME")
 config :nexus, elasticsearch_password: System.get_env("ELASTICSEARCH_PASSWORD")
 
+# Setup the scheduler for the update task Nexus.Update.run_update()
+config :nexus, Nexus.Scheduler,
+  jobs: [
+    {"*/180 * * * *", {Nexus.Update, :run_update, []}} # every 3 hours
+  ]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

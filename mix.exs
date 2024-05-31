@@ -42,7 +42,8 @@ defmodule Nexus.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.2"},
       {:httpoison, "~> 2.0"},
-      {:csv, "~> 3.2"}
+      {:csv, "~> 3.2"},
+      {:quantum, "~> 3.0"}
     ]
   end
 

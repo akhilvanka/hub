@@ -10,6 +10,7 @@ defmodule Nexus.Application do
     children = [
       NexusWeb.Telemetry,
       Nexus.Repo,
+      Nexus.Scheduler,
       {Ecto.Migrator,
         repos: Application.fetch_env!(:nexus, :ecto_repos),
         skip: skip_migrations?()},

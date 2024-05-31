@@ -18,10 +18,12 @@ defmodule Nexus.Elasticsearch do
     ssl_config = ssl_config()
     auth = [{"Authorization", "Basic #{Base.encode64("#{Application.get_env(:nexus, :elasticsearch_username)}:#{Application.get_env(:nexus, :elasticsearch_password)}")}"}]
 
-    case HTTPoison.put("#{Application.get_env(:nexus, :elasticsearch_url)}/lever_jobs/_create/#{id}", Jason.encode!(job), [{"Content-Type", "application/json"} | auth], ssl: ssl_config) do
-      {:ok, %HTTPoison.Response{status_code: 201}} -> {:ok}
-      {:ok, %HTTPoison.Response{status_code: 409}} -> {:error, "Job already exists"}
-      {:error, %HTTPoison.Error{reason: reason}}   -> {:error, reason}
+    unless check_id?(id, ssl_config, auth) do
+      case HTTPoison.put("#{Application.get_env(:nexus, :elasticsearch_url)}/lever_jobs/_create/#{id}", Jason.encode!(job), [{"Content-Type", "application/json"} | auth], ssl: ssl_config) do
+        {:ok, %HTTPoison.Response{status_code: 201}} -> {:ok}
+        {:ok, %HTTPoison.Response{status_code: 409}} -> {:error, "Job already exists"}
+        {:error, %HTTPoison.Error{reason: reason}}   -> {:error, reason}
+      end
     end
   end
 
@@ -46,5 +48,13 @@ defmodule Nexus.Elasticsearch do
     hash = :crypto.hash(:sha256, Jason.encode!(job))
            |> Base.encode16()
     Map.put(job, "hash", hash)
+  end
+
+  defp check_id?(id, ssl_opts, auth_headers) do
+    case HTTPoison.head("#{Application.get_env(:nexus, :elasticsearch_url)}/lever_jobs/_doc/#{id}", auth_headers, ssl: ssl_opts) do
+      {:ok, %HTTPoison.Response{status_code: 200}} -> true
+      {:ok, %HTTPoison.Response{status_code: 404}} -> false
+      {:error, _} -> false
+    end
   end
 end
