@@ -29,7 +29,11 @@ defmodule Nexus.Update do
         if new_hash != cached_hash do
           Logger.info("Updating company: #{company_name}")
           update_hash(company_name, new_hash)
-          Nexus.Elasticsearch.put(body)
+
+          body
+          |> Jason.decode!()
+          |> Enum.each(&Nexus.Elasticsearch.put/1)
+
         end
 
       {:ok, %HTTPoison.Response{body: _body, status_code: 404}} -> {:error, "Company not found: #{company_name}"}
