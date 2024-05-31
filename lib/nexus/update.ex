@@ -27,14 +27,25 @@ defmodule Nexus.Update do
         new_hash = :crypto.hash(:sha256, body) |> Base.encode16()
 
         if new_hash != cached_hash do
-          Repo.update!(Company.changeset(%Company{name: company_name, cached_hash: new_hash}))
+          update_hash(company_name, new_hash)
           Nexus.Elasticsearch.put(body)
         end
 
       {:ok, %HTTPoison.Response{body: _body, status_code: 404}} -> {:error, "Company not found: #{company_name}"}
       {:error, %HTTPoison.Error{reason: reason}} -> {:error, "Failed to fetch company data for #{company_name}: #{reason}"}
     end
+  end
 
+  defp update_hash(name, hash) do
+    case Repo.get(Company, name) do
+      nil -> {:error, "Company not found"}
+      company ->
+        changeset = Company.changeset(company, %{cached_hash: hash})
+        case Repo.update(changeset) do
+          {:ok, _} -> {:ok}
+          {:error, changeset} -> {:error, "Failed to update company: #{inspect(changeset)}"}
+        end
+    end
   end
 
 end
