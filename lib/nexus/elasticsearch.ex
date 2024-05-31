@@ -3,9 +3,9 @@ defmodule Nexus.Elasticsearch do
   A module for interacting with an Elasticsearch instance to store job data
   """
 
-  @es_url Application.compile_env!(:nexus, :elasticsearch_url)
-  @es_user Application.compile_env!(:nexus, :elasticsearch_username)
-  @es_pass Application.compile_env!(:nexus, :elasticsearch_password)
+  @es_url Application.get_env!(:nexus, :elasticsearch_url)
+  @es_user Application.get_env!(:nexus, :elasticsearch_username)
+  @es_pass Application.get_env!(:nexus, :elasticsearch_password)
 
   @doc """
   Pass a Jason.decode!(body) of a company's job data to this function to store it in Elasticsearch
