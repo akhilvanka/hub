@@ -22,6 +22,7 @@ defmodule Nexus.Elasticsearch do
       case HTTPoison.put("#{Application.get_env(:nexus, :elasticsearch_url)}/lever_jobs/_create/#{id}", Jason.encode!(job), [{"Content-Type", "application/json"} | auth], ssl: ssl_config) do
         {:ok, %HTTPoison.Response{status_code: 201}} -> {:ok}
         {:ok, %HTTPoison.Response{status_code: 409}} -> {:error, "Job already exists"}
+        {:ok, %HTTPoison.Response{status_code: 401}} -> {:error, "Unauthorized"}
         {:error, %HTTPoison.Error{reason: reason}}   -> {:error, reason}
       end
     end
@@ -53,6 +54,7 @@ defmodule Nexus.Elasticsearch do
   defp check_id?(id, ssl_opts, auth_headers) do
     case HTTPoison.head("#{Application.get_env(:nexus, :elasticsearch_url)}/lever_jobs/_doc/#{id}", auth_headers, ssl: ssl_opts) do
       {:ok, %HTTPoison.Response{status_code: 200}} -> true
+      {:ok, %HTTPoison.Response{status_code: 401}} -> false
       {:ok, %HTTPoison.Response{status_code: 404}} -> false
       {:error, _} -> false
     end
